@@ -8,6 +8,18 @@ if [ "$EUID" -ne 0 ]; then
     exit
 fi
 
+check_progs() {
+    [ -f /usr/bin/dnsmasq ] || echo "[-] dnsmasq not found."
+    [ -f /usr/bin/hostapd ] || echo "[-] hostapd not found."
+    [ -f /usr/bin/mitmproxy ] || echo "[-] mitmproxy not found."
+}
+
+if [ "$1" = "test" ]; then
+    check_progs
+    exit
+fi
+
+
 set_iptables() {
     # $1: A, I, or D
     # $2: wifi interface
