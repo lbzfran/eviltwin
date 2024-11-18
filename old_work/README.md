@@ -1,4 +1,7 @@
 
+# NOTE
+Old steps we used with the first wifi card.
+
 # Steps
 
 1. Setup Wi-Fi Hotspot

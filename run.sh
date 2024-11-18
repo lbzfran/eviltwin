@@ -2,7 +2,6 @@
 
 # check if sudo
 
-
 #airmon-ng check kill
 
 airmon-ng start wlan1
@@ -33,8 +32,7 @@ hostapd -B hostapd.conf
 
 # run mitm with either:
 # mitmproxy or mitmweb
-mitmproxy --mode transparent --showhost --listen-port 8080 -s flip.py
-
+mitmproxy --set tls_version_client_min=SSL3 --mode transparent --showhost -s flip.py
 
 # cleanup
 pkill mitmproxy || pkill mitmweb

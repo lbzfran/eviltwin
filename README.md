@@ -21,11 +21,9 @@ Use an up-to-date Kali Linux Installation.
 Creating the AP will require the following packages:
 - hostapd (creates the access point)
 - dnsmasq (DHCP service)
-- dsniff (provides `dnsspoof`)
 
-Manipulating web contents will be done using the following packages:
-- bettercap (sniffs traffic and execute MITM attacks)
-- SSLStrip (bypasses HTTPS encryption and HSTS)
+Manipulating web contents will be done using the following package:
+- MITMProxy (sniffs traffic and execute MITM attacks)
 
 Ensure the following files are in the same directory,
 and that the related interface and ssid have been provided
@@ -37,7 +35,6 @@ NOTE: when assigning the interfaces, if the interface is `wlan0`,
 then the assignment must be `interface=wlan0mon`.
 
 The ssid is just the name of the Wifi (or access point) to be displayed.
-
 
 # Instructions
 
@@ -123,7 +120,6 @@ terminal.
 ```
 hostapd hostapd.conf
 dnsmasq -C dnsmasq.conf
-dnsspoof -i wlp4s0mon # didnt run this but it worked anyways
 ```
 
 ## Deauthenticating Client
@@ -154,9 +150,6 @@ Assuming the fake access point is setup accordingly, this process
 should cause the target client to automatically connect to that AP
 instead of the Good Twin.
 
-MISSING SSL stripping.
-
-
 ## Traffic Injection
 https://charlesreid1.com/wiki/MITM/Traffic_Injection
 
@@ -165,6 +158,5 @@ the user is trying to view.
 
 ```
 mitmproxy --set tls_version_client_min=SSL3 --mode transparent --showhost -s flip.py
-
 ```
 
