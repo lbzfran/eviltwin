@@ -1,6 +1,19 @@
 #!/bin/sh
 
 # check if sudo
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run script as root."
+    exit
+fi
+
+check_progs() {
+    echo "[*] checking if dependencies exist."
+    [ -f /usr/bin/dnsmasq ] || echo "[-] dnsmasq not found."
+    [ -f /usr/bin/hostapd ] || echo "[-] hostapd not found."
+    [ -f /usr/bin/mitmproxy ] || echo "[-] mitmproxy not found."
+}
+check_progs
+
 
 #airmon-ng check kill
 
