@@ -45,7 +45,7 @@ hostapd -B hostapd.conf
 
 # run mitm with either:
 # mitmproxy or mitmweb
-mitmproxy --set tls_version_client_min=SSL3 --mode transparent --showhost -s flip.py
+mitmproxy --set tls_version_client_min=SSL3 --mode transparent --showhost -s script.py
 
 # cleanup
 pkill mitmproxy || pkill mitmweb
