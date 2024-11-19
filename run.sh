@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # check if sudo
-if [ "$EUID" -ne 0 ]; then
+if [ "$EUID" = "0" ]; then
     echo "Please run script as root."
     exit
 fi
@@ -12,24 +12,18 @@ check_progs() {
     [ -f /usr/bin/hostapd ] || echo "[-] hostapd not found." && exit
     [ -f /usr/bin/mitmproxy ] || echo "[-] mitmproxy not found." && exit
 }
-check_progs
-
-
-#airmon-ng check kill
-
-airmon-ng start wlan1
-
-ifconfig wlan1mon up 192.168.1.1 netmask 255.255.255.0
-route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1
+#check_progs
 
 INTERNET_INTERFACE=wlan0
 WIFI_INTERFACE=wlan1
 if [ -f /usr/bin/fzf ]; then
+    echo "choose the internet-connected network interface: "
     INTERNET_INTERFACE=$(ip a | grep -o '\<\S*w\S*\>' | sort -u | fzf --height=50% --layout=reverse)
     if [ "$INTERNET_INTERFACE" = "" ]; then
         exit
     fi
 
+    echo "choose the access point interface: "
     WIFI_INTERFACE=$(ip a | grep -o '\<\S*w\S*\>' | sort -u | fzf --height=50% --layout=reverse)
     if [ "$WIFI_INTERFACE" = "" ]; then
         exit
@@ -49,6 +43,14 @@ if [ ! "$?" = "0" ]; then
     exit
 fi
 echo "[+] INTERFACE '$WIFI_INTERFACE' validated.";
+
+#airmon-ng check kill
+
+airmon-ng start $WIFI_INTERFACE
+
+ifconfig wlan1mon up 192.168.1.1 netmask 255.255.255.0
+route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1
+
 
 sed -i "s/\(interface=\)\(.*\)/\1${WIFI_INTERFACE}mon/" ./dnsmasq.conf ./hostapd.conf
 
@@ -90,6 +92,6 @@ pkill dnsmasq
 pkill hostapd
 firewall_set delete
 
-airmon-ng stop wlan1
+airmon-ng stop $WIFI_INTERFACE
 
 systemctl restart NetworkManager

@@ -55,7 +55,7 @@ class DuckAttackCode:
 
                 flow.response.content = html.encode('utf-8')
 
-class ModifyHTMLCode:
+class FlipHTMLCode:
     css = """
     <style>
         body {
@@ -85,4 +85,4 @@ class ModifyHTMLCode:
 
 
 
-addons = [DuckAttackCode()]
+addons = [FlipHTMLCode(),DuckAttackCode()]
