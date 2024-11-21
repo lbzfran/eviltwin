@@ -7,7 +7,8 @@ These steps will involve performing the following:
 - Creating a Fake Access Point (AP)
 - Traffic Injection
 
-The example will flip any website the user goes to.
+The example will flip any website the user goes to,
+and launch a 'duck attack'.
 
 # Requirements
 https://zsecurity.org/wp-content/uploads/2020/08/fapCommands.txt
