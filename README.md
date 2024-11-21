@@ -5,8 +5,6 @@ These instructions will show how to perform a full Evil Twin Attack.
 
 These steps will involve performing the following:
 - Creating a Fake Access Point (AP)
-- Deauthentication Attack
-- HTTP downgrade
 - Traffic Injection
 
 The example will flip any website the user goes to.
