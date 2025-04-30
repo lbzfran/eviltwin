@@ -121,8 +121,7 @@ dnsmasq -C dnsmasq.conf
 ```
 
 ## Deauthenticating Client
-https://charlesreid1.com/wiki/Evil_Twin/Setup
-https://xerosploit.readthedocs.io/en/latest/proxying/http.html
+
 
 We need to first locate the MAC address of the target client.
 This will require using the MAC address of the `Good Twin` our
@@ -149,7 +148,7 @@ should cause the target client to automatically connect to that AP
 instead of the Good Twin.
 
 ## Traffic Injection
-https://charlesreid1.com/wiki/MITM/Traffic_Injection
+
 
 Our example will perform an HTML Injection that flips the web content
 the user is trying to view.
@@ -157,4 +156,10 @@ the user is trying to view.
 ```
 mitmproxy --set tls_version_client_min=SSL3 --mode transparent --showhost -s flip.py
 ```
+
+## Resources
+- https://charlesreid1.com/wiki/Evil_Twin/Setup
+- https://xerosploit.readthedocs.io/en/latest/proxying/http.html
+- https://charlesreid1.com/wiki/MITM/Traffic_Injection
+
 
